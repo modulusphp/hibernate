@@ -1,0 +1,23 @@
+{
+  "name": "modulusphp/hibernate",
+  "description": "Hibernate for modulusPHP",
+  "version": "1.9.0",
+  "license": "MIT",
+  "type": "package",
+  "authors": [
+    {
+      "name": "Donald Pakkies",
+      "email": "donaldpakkies@gmail.com"
+    }
+  ],
+  "require": {
+    "modulusphp/http": "^1.9.0",
+    "illuminate/database": "^5.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "Modulus\\Hibernate\\": ""
+    }
+  },
+  "minimum-stability": "stable"
+}
