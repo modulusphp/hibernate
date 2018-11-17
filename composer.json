@@ -1,15 +1,13 @@
 {
   "name": "modulusphp/hibernate",
-  "description": "Hibernate for modulusPHP",
-  "version": "1.9.0",
+  "description": "Hibernate for Modulus",
+  "version": "1.9.1",
   "license": "MIT",
   "type": "package",
-  "authors": [
-    {
-      "name": "Donald Pakkies",
-      "email": "donaldpakkies@gmail.com"
-    }
-  ],
+  "authors": [{
+    "name": "Donald Pakkies",
+    "email": "donaldpakkies@gmail.com"
+  }],
   "require": {
     "modulusphp/http": "^1.9.0",
     "illuminate/database": "^5.6"
