@@ -9,7 +9,6 @@
     "email": "donaldpakkies@gmail.com"
   }],
   "require": {
-    "modulusphp/http": "^1.9.0",
     "illuminate/database": "^5.6"
   },
   "autoload": {
