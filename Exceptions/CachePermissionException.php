@@ -11,7 +11,7 @@ class CachePermissionException extends Exception
    *
    * @var string
    */
-  protected $message = "Could not create cache folder. Check your permissions.";
+  protected $message = "Could not create cache folder. Check your permissions";
 
   /**
    * __construct

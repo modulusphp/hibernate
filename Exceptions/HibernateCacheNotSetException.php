@@ -11,7 +11,7 @@ class HibernateCacheNotSetException extends Exception
    *
    * @var string
    */
-  protected $message = 'Caching directory is not set. Configure hibernate["cache"]["storage"].';
+  protected $message = 'Caching directory is not set. Configure hibernate["cache"]["storage"]';
 
   /**
    * __construct

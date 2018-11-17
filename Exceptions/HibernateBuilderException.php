@@ -11,7 +11,7 @@ class HibernateBuilderException extends Exception
    *
    * @var string
    */
-  protected $message = 'Returned value is not a real Eloquent query.';
+  protected $message = 'Returned value is not a real Eloquent query';
 
   /**
    * __construct
