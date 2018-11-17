@@ -11,7 +11,7 @@ class HibernateCacheNotSetException extends Exception
    *
    * @var string
    */
-  protected $message = 'Caching directory is not set. Configure hibernate["cache"]["storage"].';
+  protected $message = 'Caching directory is not set. Configure hibernate["cache"]["storage"]';
 
   /**
    * __construct
@@ -20,7 +20,8 @@ class HibernateCacheNotSetException extends Exception
    */
   public function __construct()
   {
-    $args = debug_backtrace()[2];
+    $position = count(debug_backtrace()) == 10 ? 3 : 2;
+    $args     = debug_backtrace()[$position];
 
     foreach ($args as $key => $value) {
       $this->{$key} = $value;

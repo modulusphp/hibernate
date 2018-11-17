@@ -3,7 +3,6 @@
 namespace Modulus\Hibernate;
 
 use Closure;
-use Modulus\Http\Get;
 use Modulus\Hibernate\Lazy;
 use Illuminate\Database\Eloquent\Builder;
 use Modulus\Hibernate\Exceptions\HibernateBuilderException;
@@ -19,7 +18,7 @@ trait Model
    */
 public static function lazy(int $count, ?Closure $closure = null) : Lazy
 {
-  $page = Get::has('page') ? Get::key('page') : null;
+  $page = isset($_GET['page']) ? $_GET['page'] : null;
   $path = isset($_SERVER['REQUEST_URI']) ? ((str_contains($_SERVER['REQUEST_URI'], '?')) ? explode('?', ($_SERVER['REQUEST_URI']))[0] : $_SERVER['REQUEST_URI']) : '';
 
   if ($page == null) {

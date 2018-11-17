@@ -11,7 +11,7 @@ class CachePermissionException extends Exception
    *
    * @var string
    */
-  protected $message = "Could not create cache folder. Check your permissions.";
+  protected $message = "Could not create cache folder. Check your permissions";
 
   /**
    * __construct
@@ -20,7 +20,8 @@ class CachePermissionException extends Exception
    */
   public function __construct()
   {
-    $args = debug_backtrace()[3];
+    $position = count(debug_backtrace()) == 10 ? 3 : 4;
+    $args = debug_backtrace()[$position];
 
     foreach ($args as $key => $value) {
       $this->{$key} = $value;
