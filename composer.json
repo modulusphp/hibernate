@@ -1,7 +1,7 @@
 {
   "name": "modulusphp/hibernate",
   "description": "Hibernate for Modulus",
-  "version": "1.9.1.2",
+  "version": "1.9.2.0",
   "license": "MIT",
   "type": "package",
   "authors": [{
