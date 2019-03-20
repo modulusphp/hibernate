@@ -1,7 +1,7 @@
 {
   "name": "modulusphp/hibernate",
   "description": "Hibernate for Modulus",
-  "version": "1.9.2.0",
+  "version": "1.9.2.1",
   "license": "MIT",
   "type": "package",
   "authors": [{
@@ -9,7 +9,8 @@
     "email": "donaldpakkies@gmail.com"
   }],
   "require": {
-    "illuminate/database": "5.7.*"
+    "illuminate/database": "5.7.*",
+    "modulusphp/support": "1.9.*"
   },
   "autoload": {
     "psr-4": {

@@ -7,6 +7,7 @@ use Illuminate\Database\Capsule\Manager;
 
 class Capsule extends Manager
 {
+
   /**
    * Setup the default database configuration options.
    *
