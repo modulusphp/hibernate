@@ -2,8 +2,12 @@
 
 namespace Modulus\Hibernate;
 
+use Modulus\Support\Extendable;
+
 class Lazy
 {
+  use Extendable;
+
   /**
    * $current_page
    *
