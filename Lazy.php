@@ -4,7 +4,7 @@ namespace Modulus\Hibernate;
 
 use Modulus\Support\Extendable;
 
-class Lazy
+final class Lazy
 {
   use Extendable;
 

@@ -6,7 +6,7 @@ use Modulus\Support\Extendable;
 use Modulus\Hibernate\Cache\CacheInterface;
 use Modulus\Hibernate\Cache\CacheBase as Base;
 
-class Cache extends Base implements CacheInterface
+final class Cache extends Base implements CacheInterface
 {
   use Extendable;
 
