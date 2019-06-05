@@ -94,4 +94,20 @@ final class Mail
 
     return self::getMail();
   }
+
+  /**
+   * Attach a file
+   *
+   * @param string $path
+   * @param string $name
+   * @return Mail
+   */
+  public static function attachment(string $path, string $name = '') : Mail
+  {
+    self::getMail()->attachments[] = [
+      'file' => $path, 'name' => $name
+    ];
+
+    return self::getMail();
+  }
 }
