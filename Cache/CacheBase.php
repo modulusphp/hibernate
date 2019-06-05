@@ -90,6 +90,25 @@ class CacheBase
   }
 
   /**
+   * Retrieve cached value
+   *
+   * @param string $key
+   * @return void
+   */
+  public function retrieve(string $key)
+  {
+    $file = $this->file;
+
+    if (file_exists($file)) {
+      $cache = AES::decrypt(file_get_contents($file));
+
+      return isset($cache[$key]) ? $cache[$key]['data'] : null;
+    }
+
+    return null;
+  }
+
+  /**
    * Prepare the cache
    *
    * @param string $ds
