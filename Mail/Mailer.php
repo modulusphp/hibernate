@@ -34,4 +34,19 @@ trait Mailer
 
     return $mailer;
   }
+
+  /**
+   * Set from details
+   *
+   * @param PHPMailer $mailer
+   * @param Mail $mail
+   * @return void
+   */
+  private function setFrom(PHPMailer $mailer, Mail $mail) : void
+  {
+    $mailer->SetFrom(
+      $mail->from_email ?? $mail->connection['from']['address'],
+      $mail->from_name ?? $mail->connection['from']['name']
+    );
+  }
 }
