@@ -42,6 +42,29 @@ class CacheBase
   }
 
   /**
+   * Assign new item to key
+   *
+   * @param string $key
+   * @param mixed $value
+   * @param Carbon $expire
+   * @return void
+   */
+  public function assign(string $key, $value, ?Carbon $expire = null)
+  {
+    $file = $this->file;
+
+    if (file_exists($file)) {
+      $cache = AES::decrypt(file_get_contents($file));
+
+      $cache[$key] = ['data' => $value, 'expire' => $expire];
+
+      return file_put_contents($file, AES::encrypt($cache)) ? true : false;
+    }
+
+    return false;
+  }
+
+  /**
    * Prepare the cache
    *
    * @param string $ds
