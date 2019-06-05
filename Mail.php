@@ -42,4 +42,30 @@ final class Mail
 
     return self::getMail();
   }
+
+  /**
+   * Set recipient(s) (cc)
+   *
+   * @param string|array $email
+   * @return Mail
+   */
+  public static function cc($email) : Mail
+  {
+    self::getMail()->cc = is_array($email) ? $email : (is_string($email) ? [$email] : []);
+
+    return self::getMail();
+  }
+
+  /**
+   * Set recipient(s) (bcc)
+   *
+   * @param string|array $email
+   * @return Mail
+   */
+  public static function bcc($email) : Mail
+  {
+    self::getMail()->bcc = is_array($email) ? $email : (is_string($email) ? [$email] : []);
+
+    return self::getMail();
+  }
 }
