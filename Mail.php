@@ -16,6 +16,7 @@ final class Mail
    * Set default connection
    *
    * @param string $connection
+   * @throws Exception
    * @return Mail
    */
   public static function connection(string $connection) : Mail
