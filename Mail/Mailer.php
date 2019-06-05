@@ -49,4 +49,26 @@ trait Mailer
       $mail->from_name ?? $mail->connection['from']['name']
     );
   }
+
+  /**
+   * Set email recipients
+   *
+   * @param PHPMailer $mailer
+   * @param Mail $mail
+   * @return void
+   */
+  private function setRecipients(PHPMailer $mailer, Mail $mail) : void
+  {
+    foreach($mail->recipients as $recipient) {
+      $mailer->AddAddress($recipient);
+    }
+
+    foreach($mail->cc as $recipient) {
+      $mailer->addCC($recipient);
+    }
+
+    foreach($mail->bcc as $recipient) {
+      $mailer->addBCC($recipient);
+    }
+  }
 }
