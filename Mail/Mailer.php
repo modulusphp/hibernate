@@ -36,6 +36,24 @@ trait Mailer
   }
 
   /**
+   * Send email
+   *
+   * @param Mail $mail
+   * @param string|null $option
+   * @return mixed
+   */
+  public function send(Mail $mail)
+  {
+    $mailer = $this->getMailer($mail->connection, $mail->debug);
+
+    $this->prepare($mailer, $mail);
+
+    if ($mailer->Send()) return true;
+
+    return $mailer->ErrorInfo;
+  }
+
+  /**
    * Prepare email
    *
    * @param PHPMailer $mailer
