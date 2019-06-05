@@ -2,10 +2,14 @@
 
 namespace Modulus\Hibernate;
 
+use Carbon\Carbon;
 use Modulus\Support\Extendable;
+use Modulus\Hibernate\Mail\Job;
 use Modulus\Hibernate\Mail\Single;
 use Modulus\Hibernate\Mail\Mailable;
 use Modulus\Hibernate\Mail\MailProps;
+use Illuminate\Database\Eloquent\Model;
+use Modulus\Hibernate\Queue\Dispatcher;
 use Modulus\Hibernate\Exceptions\MailableException;
 
 final class Mail
@@ -146,5 +150,30 @@ final class Mail
      * Email was successful, return true
      */
     return true;
+  }
+
+  /**
+   * Queue email
+   *
+   * @param Mailable $mailable
+   * @param Carbon $delay
+   * @return string
+   */
+  public function queue(Mailable $mailable, ?Carbon $delay = null) : string
+  {
+    /**
+     * Set the connection
+     */
+    $this->connection == null ? $this->connection(config('mail.default')) : null;
+
+    /**
+     * Set the subject
+     */
+    $this->subject ? $mailable->subject($this->subject) : null;
+
+    /**
+     * Queue email and process it in the background.
+     */
+    return Dispatcher::now(new Job($mailable, $this), $delay);
   }
 }
