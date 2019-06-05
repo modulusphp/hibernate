@@ -1,7 +1,8 @@
 {
   "name": "modulusphp/hibernate",
   "description": "Hibernate for Modulus",
-  "version": "1.9.2.2",
+  "keywords": ["mailer", "queue", "cache"],
+  "version": "1.9.3.0",
   "license": "MIT",
   "type": "package",
   "authors": [{
