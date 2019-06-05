@@ -11,4 +11,19 @@ final class Mail
   use Single;
   use MailProps;
   use Extendable;
+
+  /**
+   * Set default connection
+   *
+   * @param string $connection
+   * @return Mail
+   */
+  public static function connection(string $connection)
+  {
+    if (!config("mail.connections.{$connection}")) throw new Exception('Invalid connection');
+
+    self::getMail()->connection = config("mail.connections.{$connection}");
+
+    return self::getMail();
+  }
 }
