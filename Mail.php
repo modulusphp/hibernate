@@ -2,9 +2,10 @@
 
 namespace Modulus\Hibernate;
 
+use Exception;
 use Carbon\Carbon;
-use Modulus\Support\Extendable;
 use Modulus\Hibernate\Mail\Job;
+use Modulus\Support\Extendable;
 use Modulus\Hibernate\Mail\Single;
 use Modulus\Hibernate\Mail\Mailable;
 use Modulus\Hibernate\Mail\MailProps;
