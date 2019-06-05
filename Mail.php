@@ -68,4 +68,17 @@ final class Mail
 
     return self::getMail();
   }
+
+  /**
+   * Set reply to email
+   *
+   * @param string $email
+   * @return Mail
+   */
+  public static function replyTo(string $email) : Mail
+  {
+    self::getMail()->reply_to = $email;
+
+    return self::getMail();
+  }
 }
