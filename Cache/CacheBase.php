@@ -2,9 +2,11 @@
 
 namespace Modulus\Hibernate\Cache;
 
+use Carbon\Carbon;
 use Modulus\Support\Config;
 use Modulus\Security\Encrypter;
 use Modulus\Support\Filesystem;
+use Modulus\Hibernate\Encrypt\AES;
 use Modulus\Hibernate\Exceptions\CachePermissionException;
 use Modulus\Hibernate\Exceptions\HibernateCacheNotSetException;
 
@@ -15,7 +17,7 @@ class CacheBase
    *
    * @var string
    */
-  private $file;
+  protected $file;
 
   /**
    * __construct
@@ -32,38 +34,34 @@ class CacheBase
   }
 
   /**
-   * Remove key from cache file
-   *
-   * @param string $key
-   * @return mixed
-   */
-  public function remove(string $key)
-  {
-    $file = $this->file;
-
-    if (file_exists($file)) {
-      $data = unserialize($this->decrypt(file_get_contents($file)));
-
-      if (is_array($data) && isset($data[$key])) {
-        unset($data[$key]);
-        $data = $this->encrypt(serialize($data));
-        return file_put_contents($file, $data);
-      }
-    }
-
-    return false;
-  }
-
-  /**
    * Delete cache file
    *
    * @return bool
    */
   public function delete()
   {
+    return file_exists($this->file) ? Filesystem::delete($this->file) : false;
+  }
+
+  /**
+   * Remove key from cache file
+   *
+   * @param string $key
+   * @return bool
+   */
+  public function remove(string $key) : bool
+  {
     $file = $this->file;
 
-    if (file_exists($file)) return Filesystem::delete($file);
+    if (file_exists($file)) {
+      $cache = AES::decrypt(file_get_contents($file));
+
+      if (is_array($cache) && isset($cache[$key])) {
+        unset($cache[$key]);
+
+        return file_put_contents($file, AES::encrypt($cache));
+      }
+    }
 
     return false;
   }
@@ -73,35 +71,20 @@ class CacheBase
    *
    * @param string $key
    * @param mixed $value
-   * @param bool $overwrite
-   * @return mixed
+   * @param Carbon $expire
+   * @return void
    */
-  public function assign(string $key, $value, bool $overwrite = false)
+  public function assign(string $key, $value, ?Carbon $expire = null)
   {
     $file = $this->file;
 
     if (file_exists($file)) {
-      $data = unserialize($this->decrypt(file_get_contents($file)));
+      $cache = AES::decrypt(file_get_contents($file));
 
-      if (is_array($data)) {
-        if (isset($data[$key])) {
-          if ($overwrite == true) {
-            $data[$key] = $value;
-            $data = $this->encrypt(serialize($data));
-            return file_put_contents($file, $data);
-          }
-          return false;
-        } else {
-          $data[$key] = $value;
-          $data = $this->encrypt(serialize($data));
-          return file_put_contents($file, $data);
-        }
-      }
+      $cache[$key] = ['data' => $value, 'expire' => $expire];
+
+      return file_put_contents($file, AES::encrypt($cache)) ? true : false;
     }
-
-    $data = $this->encrypt(serialize([$key => $value]));
-
-    file_put_contents($file, $data);
 
     return false;
   }
@@ -110,21 +93,48 @@ class CacheBase
    * Retrieve cached value
    *
    * @param string $key
-   * @return mixed
+   * @return void
    */
   public function retrieve(string $key)
   {
     $file = $this->file;
 
     if (file_exists($file)) {
-      $data = unserialize($this->decrypt(file_get_contents($file)));
+      $cache = AES::decrypt(file_get_contents($file));
 
-      if (isset($data[$key])) {
-        return $data[$key];
-      }
+      return isset($cache[$key]) ? $cache[$key]['data'] : null;
     }
 
     return null;
+  }
+
+  /**
+   * Check if item is cached
+   *
+   * @param string $key
+   * @return bool
+   */
+  public function present(string $key) : bool
+  {
+    $file = $this->file;
+
+    if (file_exists($file)) {
+      $cache = AES::decrypt(file_get_contents($file));
+
+      return isset($cache[$key]) ? true : false;
+    }
+
+    return false;
+  }
+
+  /**
+   * Get all cached data
+   *
+   * @return array
+   */
+  public function all() : array
+  {
+    return (file_exists($this->file) && is_array(AES::decrypt(file_get_contents($this->file)))) ? AES::decrypt(file_get_contents($this->file)) : [];
   }
 
   /**
@@ -137,10 +147,10 @@ class CacheBase
     $file = $this->file;
 
     if (file_exists($file)) {
-      $data = unserialize($this->decrypt(file_get_contents($file)));
+      $cache = AES::decrypt(file_get_contents($file));
 
       return [
-        'records' => count($data),
+        'records' => count(is_array($cache) ? $cache : []),
         'size' => round(filesize($file) / 1024, 1),
         'updated_at' => date('Y-m-d h:i:s', filemtime($file))
       ];
@@ -150,37 +160,9 @@ class CacheBase
   }
 
   /**
-   * Encrypt cache
-   *
-   * @param string $data
-   * @return string
-   */
-  private function encrypt(string $data)
-  {
-    $secret = explode(':', config('app.key'))[1];
-    $secret = base64_decode($secret);
-
-    return (new Encrypter($secret))->encrypt($data, 9);
-  }
-
-  /**
-   * Decrypt cache
-   *
-   * @param string $data
-   * @return string
-   */
-  private function decrypt(string $data)
-  {
-    $secret = explode(':', config('app.key'))[1];
-    $secret = base64_decode($secret);
-
-    return (new Encrypter($secret))->decrypt($data);
-  }
-
-  /**
    * Prepare the cache
    *
-   * @param mixed $ds
+   * @param string $ds
    * @return void
    */
   private function instance($ds)
@@ -193,6 +175,6 @@ class CacheBase
     if (!is_dir($path))
       throw new CachePermissionException;
 
-    $this->file = $path . $ds . 'hibernate.dat';
+    $this->file = $path . $ds . '.cache';
   }
 }

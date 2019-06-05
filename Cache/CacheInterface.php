@@ -2,6 +2,8 @@
 
 namespace Modulus\Hibernate\Cache;
 
+use Carbon\Carbon;
+
 interface CacheInterface
 {
   /**
@@ -9,24 +11,25 @@ interface CacheInterface
    *
    * @param string $key
    * @param mixed $value
-   * @return mixed
+   * @param Carbon $expire
+   * @return bool
    */
-  public static function set(string $key, $value);
+  public static function set(string $key, $value, Carbon $expire);
 
   /**
-   * Cache new item if its not already cached
+   * Cache forever
    *
    * @param string $key
    * @param mixed $value
-   * @return void
+   * @return bool
    */
-  public static function add(string $key, $value);
+  public static function forever(string $key, $value);
 
   /**
    * Get cached key
    *
    * @param string $key
-   * @return void
+   * @return mixed
    */
   public static function get(string $key);
 
@@ -36,15 +39,15 @@ interface CacheInterface
    * @param string $key
    * @return bool
    */
-  public static function has(string $key);
+  public static function has(string $key) : bool;
 
   /**
    * Remove cached item
    *
    * @param string $key
-   * @return void
+   * @return bool
    */
-  public static function forget(string $key);
+  public static function forget(string $key) : bool;
 
   /**
    * Retrieve and remove

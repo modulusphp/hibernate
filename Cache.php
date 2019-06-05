@@ -2,11 +2,12 @@
 
 namespace Modulus\Hibernate;
 
+use Carbon\Carbon;
 use Modulus\Support\Extendable;
+use Modulus\Hibernate\Cache\CacheBase;
 use Modulus\Hibernate\Cache\CacheInterface;
-use Modulus\Hibernate\Cache\CacheBase as Base;
 
-final class Cache extends Base implements CacheInterface
+final class Cache extends CacheBase implements CacheInterface
 {
   use Extendable;
 
@@ -15,22 +16,35 @@ final class Cache extends Base implements CacheInterface
    *
    * @param string $key
    * @param mixed $value
-   * @return mixed
+   * @param Carbon $expire
+   * @return bool
    */
-  public static function set(string $key, $value)
+  public static function set(string $key, $value, Carbon $expire)
   {
-    return (new Cache)->assign($key, $value, true);
+    return (new self)->assign($key, $value, $expire);
+  }
+
+  /**
+   * Cache forever
+   *
+   * @param string $key
+   * @param mixed $value
+   * @return bool
+   */
+  public static function forever(string $key, $value)
+  {
+    return (new self)->assign($key, $value, null);
   }
 
   /**
    * Get cached key
    *
    * @param string $key
-   * @return void
+   * @return mixed
    */
   public static function get(string $key)
   {
-    return (new Cache)->retrieve($key);
+    return (new self)->retrieve($key);
   }
 
   /**
@@ -41,29 +55,16 @@ final class Cache extends Base implements CacheInterface
    */
   public static function has(string $key) : bool
   {
-    if ((new Cache)->retrieve($key) == null) return false;
-    return true;
-  }
-
-  /**
-   * Cache new item if its not already cached
-   *
-   * @param string $key
-   * @param mixed $value
-   * @return void
-   */
-  public static function add(string $key, $value)
-  {
-    return (new Cache)->assign($key, $value, false);
+    return (new self)->present($key);
   }
 
   /**
    * Remove cached item
    *
    * @param string $key
-   * @return void
+   * @return bool
    */
-  public static function forget(string $key)
+  public static function forget(string $key) : bool
   {
     return (new Cache)->remove($key);
   }
@@ -78,6 +79,7 @@ final class Cache extends Base implements CacheInterface
   {
     if (Self::has($key)) {
       $value = Self::get($key);
+
       Self::forget($key);
 
       return $value;
