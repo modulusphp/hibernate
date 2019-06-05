@@ -53,4 +53,17 @@ class Mailable implements MailableInterface
 
     return $this;
   }
+
+  /**
+   * Set email variables
+   *
+   * @param array $variables
+   * @return Mailable
+   */
+  public function with(array $variables) : Mailable
+  {
+    $this->variables = $variables;
+
+    return $this;
+  }
 }
