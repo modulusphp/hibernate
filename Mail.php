@@ -176,4 +176,30 @@ final class Mail
      */
     return Dispatcher::now(new Job($mailable, $this), $delay);
   }
+
+  /**
+   * Dump and die
+   *
+   * @param bool|null $shouldDump
+   * @return Mail
+   */
+  public static function dump(?bool $shouldDump = null) : Mail
+  {
+    self::getMail()->dump_die = $shouldDump ?? !self::getMail()->dump_die;
+
+    return self::getMail();
+  }
+
+  /**
+   * Send and debug
+   *
+   * @param bool|null $shouldDebug
+   * @return Mail
+   */
+  public static function debug(?bool $shouldDebug = null) : Mail
+  {
+    self::getMail()->debug = $shouldDebug ?? !self::getMail()->debug;
+
+    return self::getMail();
+  }
 }
