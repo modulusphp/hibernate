@@ -40,4 +40,17 @@ class Mailable implements MailableInterface
 
     return $this;
   }
+
+  /**
+   * Set the email subject
+   *
+   * @param string $subject
+   * @return Mailable
+   */
+  public function subject(string $subject) : Mailable
+  {
+    $this->subject = $subject;
+
+    return $this;
+  }
 }
