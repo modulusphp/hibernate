@@ -27,4 +27,19 @@ final class Mail
 
     return self::getMail();
   }
+
+  /**
+   * Set recipient(s)
+   *
+   * @param string|array $email
+   * @return Mail
+   */
+  public static function to($email) : Mail
+  {
+    $email = $email instanceof Model && ($email->email || $email->email_address) ? ($email->email ?? $email->email_address) : $email;
+
+    self::getMail()->recipients = is_array($email) ? $email : (is_string($email) ? [$email] : []);
+
+    return self::getMail();
+  }
 }
