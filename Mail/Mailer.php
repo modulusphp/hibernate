@@ -71,4 +71,18 @@ trait Mailer
       $mailer->addBCC($recipient);
     }
   }
+
+  /**
+   * Set email attachments
+   *
+   * @param PHPMailer $mailer
+   * @param Mail $mail
+   * @return void
+   */
+  private function setAttachments(PHPMailer $mailer, Mail $mail) : void
+  {
+    foreach($mail->attachments as $attachment) {
+      $mailer->addAttachment($attachment['file'], $attachment['name']);
+    }
+  }
 }
