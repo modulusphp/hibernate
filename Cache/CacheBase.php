@@ -128,6 +128,28 @@ class CacheBase
   }
 
   /**
+   * Get cache details
+   *
+   * @return array|null
+   */
+  public function details()
+  {
+    $file = $this->file;
+
+    if (file_exists($file)) {
+      $cache = AES::decrypt(file_get_contents($file));
+
+      return [
+        'records' => count(is_array($cache) ? $cache : []),
+        'size' => round(filesize($file) / 1024, 1),
+        'updated_at' => date('Y-m-d h:i:s', filemtime($file))
+      ];
+    }
+
+    return null;
+  }
+
+  /**
    * Prepare the cache
    *
    * @param string $ds
