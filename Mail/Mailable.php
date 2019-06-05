@@ -17,4 +17,14 @@ class Mailable implements MailableInterface
   {
     $this->_args = func_get_args();
   }
+
+  /**
+   * Build mailable
+   *
+   * @return Mailable
+   */
+  public function build()
+  {
+    return $this;
+  }
 }
