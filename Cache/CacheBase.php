@@ -2,9 +2,11 @@
 
 namespace Modulus\Hibernate\Cache;
 
+use Carbon\Carbon;
 use Modulus\Support\Config;
 use Modulus\Security\Encrypter;
 use Modulus\Support\Filesystem;
+use Modulus\Hibernate\Encrypt\AES;
 use Modulus\Hibernate\Exceptions\CachePermissionException;
 use Modulus\Hibernate\Exceptions\HibernateCacheNotSetException;
 
