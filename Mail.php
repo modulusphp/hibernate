@@ -4,7 +4,9 @@ namespace Modulus\Hibernate;
 
 use Modulus\Support\Extendable;
 use Modulus\Hibernate\Mail\Single;
+use Modulus\Hibernate\Mail\Mailable;
 use Modulus\Hibernate\Mail\MailProps;
+use Modulus\Hibernate\Exceptions\MailableException;
 
 final class Mail
 {
@@ -109,5 +111,40 @@ final class Mail
     ];
 
     return self::getMail();
+  }
+
+  /**
+   * Send email
+   *
+   * @param Mailable $mailable
+   * @throws MailableException
+   * @return bool
+   */
+  public function send(Mailable $mailable) : bool
+  {
+    /**
+     * Set the connection
+     */
+    $this->connection == null ? $this->connection(config('mail.default')) : null;
+
+    /**
+     * Set the subject
+     */
+    $this->subject ? $mailable->subject($this->subject) : null;
+
+    /**
+     * Send the email
+     */
+    $results = $mailable->send($this);
+
+    /**
+     * Throw an exception if there was an error
+     */
+    if ($results !== true) throw new MailableException($results);
+
+    /**
+     * Email was successful, return true
+     */
+    return true;
   }
 }
