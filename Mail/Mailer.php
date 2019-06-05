@@ -36,6 +36,26 @@ trait Mailer
   }
 
   /**
+   * Prepare email
+   *
+   * @param PHPMailer $mailer
+   * @param Mail $mail
+   */
+  private function prepare(PHPMailer $mailer, Mail $mail) : void
+  {
+    $mailer->Subject = $this->subject;
+
+    $this->setFrom($mailer, $mail);
+
+    $mail->reply_to ? $mailer->addReplyTo($mail->reply_to) : null;
+
+    $this->setRecipients($mailer, $mail);
+    $this->setAttachments($mailer, $mail);
+
+    (!$mail->dump_die ?: dd($mailer));
+  }
+
+  /**
    * Set from details
    *
    * @param PHPMailer $mailer
