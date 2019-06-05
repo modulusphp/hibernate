@@ -128,6 +128,16 @@ class CacheBase
   }
 
   /**
+   * Get all cached data
+   *
+   * @return array
+   */
+  public function all() : array
+  {
+    return (file_exists($this->file) && is_array(AES::decrypt(file_get_contents($this->file)))) ? AES::decrypt(file_get_contents($this->file)) : [];
+  }
+
+  /**
    * Get cache details
    *
    * @return array|null
