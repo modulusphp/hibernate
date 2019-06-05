@@ -44,6 +44,29 @@ class CacheBase
   }
 
   /**
+   * Remove key from cache file
+   *
+   * @param string $key
+   * @return bool
+   */
+  public function remove(string $key) : bool
+  {
+    $file = $this->file;
+
+    if (file_exists($file)) {
+      $cache = AES::decrypt(file_get_contents($file));
+
+      if (is_array($cache) && isset($cache[$key])) {
+        unset($cache[$key]);
+
+        return file_put_contents($file, AES::encrypt($cache));
+      }
+    }
+
+    return false;
+  }
+
+  /**
    * Assign new item to key
    *
    * @param string $key
