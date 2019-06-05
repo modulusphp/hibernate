@@ -18,7 +18,7 @@ final class Mail
    * @param string $connection
    * @return Mail
    */
-  public static function connection(string $connection)
+  public static function connection(string $connection) : Mail
   {
     if (!config("mail.connections.{$connection}")) throw new Exception('Invalid connection');
 
