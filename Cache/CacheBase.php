@@ -109,6 +109,25 @@ class CacheBase
   }
 
   /**
+   * Check if item is cached
+   *
+   * @param string $key
+   * @return bool
+   */
+  public function present(string $key) : bool
+  {
+    $file = $this->file;
+
+    if (file_exists($file)) {
+      $cache = AES::decrypt(file_get_contents($file));
+
+      return isset($cache[$key]) ? true : false;
+    }
+
+    return false;
+  }
+
+  /**
    * Prepare the cache
    *
    * @param string $ds
