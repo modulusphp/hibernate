@@ -81,4 +81,17 @@ final class Mail
 
     return self::getMail();
   }
+
+  /**
+   * Set subject
+   *
+   * @param string $subject
+   * @return Mail
+   */
+  public static function subject(string $subject) : Mail
+  {
+    self::getMail()->subject = $subject;
+
+    return self::getMail();
+  }
 }
