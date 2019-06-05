@@ -32,6 +32,16 @@ class CacheBase
   }
 
   /**
+   * Delete cache file
+   *
+   * @return bool
+   */
+  public function delete()
+  {
+    return file_exists($this->file) ? Filesystem::delete($this->file) : false;
+  }
+
+  /**
    * Prepare the cache
    *
    * @param string $ds
