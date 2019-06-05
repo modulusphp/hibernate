@@ -27,4 +27,17 @@ class Mailable implements MailableInterface
   {
     return $this;
   }
+
+  /**
+   * Set the default view
+   *
+   * @param string $view
+   * @return Mailable
+   */
+  public function view(string $view) : Mailable
+  {
+    $this->view = $view;
+
+    return $this;
+  }
 }
