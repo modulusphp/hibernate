@@ -1,6 +1,6 @@
 # Modulus Hibernate Component
 
-This component is responsible for Modulus' caching, handing Queues and also extends Eloquent Models.
+This component is responsible for Modulus' caching, handling Queues and also extends Eloquent Models.
 
 Install
 -------
