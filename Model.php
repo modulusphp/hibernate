@@ -13,8 +13,8 @@ trait Model
    * Lazy loading
    *
    * @param int $count
-   * @param mixed ?Closure
-   * @return void
+   * @param null|Closure $Closure
+   * @return Lazy
    */
   public static function lazy(int $count, ?Closure $closure = null) : Lazy
   {
@@ -43,7 +43,7 @@ trait Model
     $first = ($get->count() < 1) ? null : "/?page=1";
     $last  = '/?page=' . (strpos(($total / $count),'.') ? explode('.', $total / $count)[0] + 1 : ($total / $count));
 
-    $object = [
+    return new Lazy([
       'current_page' => (int)$page,
       'data' => $get,
       'first_page_url' => $first,
@@ -52,9 +52,7 @@ trait Model
       'last_page_url' => $last,
       'per_page' => $count,
       'total' => $total
-    ];
-
-    return new Lazy($object);
+    ]);
   }
 
   /**
