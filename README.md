@@ -106,7 +106,7 @@ Here are some methods to help you get started.
 `Cache::forget()`  |                                    | `string $key`                                    | `bool`  | Remove cached item
 `Cache::pull()`    |                                    | `string $key`                                    | `mixed` | Remove cached item
 
-#### Hibernate Mail (doc incomplete)
+#### Hibernate Mail
 
 Sending emails has never been this easy. Hibernate Mail is a Mailer package built on top of PHPMailer. Creating layouts and sending emails is a lot easier and smoother.
 
@@ -115,6 +115,147 @@ Mail::to('example@something.domain')->queue(new WelcomeEmail('Donald Pakkies'));
 ```
 
 The code above, will send a welcome email to `"example@something.domain"` in the background.
+
+##### Getting Started with Hibernate Mailer
+
+You can create a new Email Class Template by running the following command:
+
+```bash
+php craftsman craft:mail TestMail
+```
+
+Your Email Class Template should look like:
+
+```php
+<?php
+
+namespace App\Mail;
+
+use Modulus\Hibernate\Mail\Mailable;
+
+class TestMail extends Mailable
+{
+  /**
+   * Handle mailable
+   *
+   * @return void
+   */
+  public function handle()
+  {
+    //
+  }
+
+  /**
+   * Build email
+   *
+   * @return Mailable
+   */
+  public function build()
+  {
+    return $this;
+  }
+}
+```
+
+Before you can do anything else, you will need to create a new Email View Template in your views:
+
+```bash
+touch resources/views/testemail.medusa.php
+```
+
+After that, we can start designing our Email View Template. Here is a quick example:
+
+```twig
+{% email_layout %}
+
+{% section('main') %}
+
+  <h3>Hello there</h3>
+
+  <p>This is your first custom Email View Template.</p>
+
+{% endsection %}
+
+{% section('footer') %}
+
+  {% email_footer %}
+
+{% endsection %}
+```
+
+The `{% email_layout %}` directive will add all the necessary css styling and html code to make your view look decent.
+
+The `{% email_layout %}` directive includes the `main` and `footer` section.
+The `{% email_footer %}` directive will add a copyright text at the bottom of all the emails sent from your application. The `env('APP_NAME')` (name of your application) will be used here.
+
+You can also include action buttons in your Email View Templates. The `{% email_action("title", "url", "alginment") %}` helps you add a button in your views:
+
+```twig
+{% email_action("Go to Google", "https://google.com", "left") %}
+```
+
+You can set the alginment to "right", "left" or "center".
+
+To make your Email Class Template load the Email View Template you just created, you just need to specify the view from the `build` method:
+
+```php
+  /**
+   * Build email
+   *
+   * @return Mailable
+   */
+  public function build()
+  {
+    return $this->view('testemail');
+  }
+```
+
+You can also pass variables from your Email Class Template to your Email View Template using the `with` method:
+
+```php
+  /**
+   * Build email
+   *
+   * @return Mailable
+   */
+  public function build()
+  {
+    return $this->view('testemail')
+                ->with([
+                  'name' => 'Donald'
+                ]);
+  }
+```
+
+Then you can access the variables like:
+
+```twig
+{% email_layout %}
+
+{% section('main') %}
+
+  <h3>Hello {{ $name }}</h3>
+
+  <p>This is your first custom Email View Template.</p>
+
+{% endsection %}
+
+{% section('footer') %}
+
+  {% email_footer %}
+
+{% endsection %}
+```
+
+##### Testing Email Templates
+
+You can easily test your Email Templates by returning an instance of a Email Class Template from a route:
+
+```php
+Route::get('/test', function () {
+  return new App\Mail\TestMail;
+});
+```
 
 Security
 -------
