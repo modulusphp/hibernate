@@ -106,7 +106,7 @@ Here are some methods to help you get started.
 `Cache::forget()`  |                                    | `string $key`                                    | `bool`  | Remove cached item
 `Cache::pull()`    |                                    | `string $key`                                    | `mixed` | Remove cached item
 
-#### Hibernate Mail (doc incomplete)
+#### Hibernate Mail
 
 Sending emails has never been this easy. Hibernate Mail is a Mailer package built on top of PHPMailer. Creating layouts and sending emails is a lot easier and smoother.
 
