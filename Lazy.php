@@ -2,9 +2,10 @@
 
 namespace Modulus\Hibernate;
 
+use Countable;
 use Modulus\Support\Extendable;
 
-final class Lazy
+final class Lazy implements Countable
 {
   use Extendable;
 
@@ -80,6 +81,16 @@ final class Lazy
     $this->per_page       = $info['per_page'];
     $this->total          = $info['total'];
     $this->data           = $info['data'];
+  }
+
+  /**
+   * Get total count of data (results)
+   *
+   * @return int
+   */
+  public function count() : int
+  {
+    return count($this->data);
   }
 
   /**
