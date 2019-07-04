@@ -3,9 +3,10 @@
 namespace Modulus\Hibernate;
 
 use Countable;
+use IteratorAggregate;
 use Modulus\Support\Extendable;
 
-final class Lazy implements Countable
+final class Lazy implements Countable, IteratorAggregate
 {
   use Extendable;
 
@@ -91,6 +92,16 @@ final class Lazy implements Countable
   public function count() : int
   {
     return count($this->data);
+  }
+
+  /**
+   * Iterate through the data (result)
+   *
+   * @return null|object
+   */
+  public function getIterator() : ?object
+  {
+    return $this->data;
   }
 
   /**
