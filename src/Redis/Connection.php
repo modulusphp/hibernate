@@ -16,11 +16,11 @@ class Connection
   /**
    * Bool Predis
    *
-   * @param array $connection
+   * @param array $options
    * @return void
    */
-  public function __construct(array $connection)
+  public function __construct(array $options)
   {
-    $this->client = new Client($connection);
+    $this->client = new Client($options);
   }
 }
