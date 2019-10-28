@@ -4,6 +4,7 @@ namespace Modulus\Hibernate\Redis;
 
 use Exception;
 use Predis\Client;
+use Modulus\Hibernate\Exceptions\UnknownRedisConnectionException;
 
 class Connection
 {
@@ -33,7 +34,7 @@ class Connection
    */
   public static function configure(string $connection = 'default')
   {
-    if (!config("redis.connections.{$connection}")) throw new Exception('Invalid redis connection');
+    if (!config("redis.connections.{$connection}")) throw new UnknownRedisConnectionException($connection);
 
     $connection = config("redis.connections.{$connection}");
 
