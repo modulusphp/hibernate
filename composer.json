@@ -16,7 +16,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Modulus\\Hibernate\\": ""
+      "Modulus\\Hibernate\\": "src/"
     }
   },
   "minimum-stability": "stable"
