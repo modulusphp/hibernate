@@ -40,4 +40,14 @@ class Connection
 
     return new self($connection);
   }
+
+  /**
+   * Get predis client
+   *
+   * @return Client
+   */
+  public function client()
+  {
+    return $this->client;
+  }
 }
