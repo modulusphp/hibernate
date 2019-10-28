@@ -2,6 +2,7 @@
 
 namespace Modulus\Hibernate\Redis;
 
+use Exception;
 use Predis\Client;
 
 class Connection
@@ -22,5 +23,20 @@ class Connection
   public function __construct(array $options)
   {
     $this->client = new Client($options);
+  }
+
+  /**
+   * Set default connection
+   *
+   * @param string $connection
+   * @return Connection
+   */
+  public static function configure(string $connection = 'default')
+  {
+    if (!config("redis.connections.{$connection}")) throw new Exception('Invalid redis connection');
+
+    $connection = config("redis.connections.{$connection}");
+
+    return new self($connection);
   }
 }
