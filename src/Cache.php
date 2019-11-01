@@ -3,13 +3,47 @@
 namespace Modulus\Hibernate;
 
 use Carbon\Carbon;
+use Modulus\Support\Config;
 use Modulus\Support\Extendable;
+use Modulus\Hibernate\Encrypt\AES;
 use Modulus\Hibernate\Cache\CacheBase;
 use Modulus\Hibernate\Cache\CacheInterface;
 
 final class Cache extends CacheBase implements CacheInterface
 {
   use Extendable;
+
+  /**
+   * Is cache encryped
+   *
+   * @return bool
+   */
+  private static function isEncrypted() : bool
+  {
+    return Config::has('cache.encrypt') ? Config::get('cache.encrypt') : true;
+  }
+
+  /**
+   * Encrypt value
+   *
+   * @param mixed $value
+   * @return string
+   */
+  private static function encrypt($value)
+  {
+    return self::isEncrypted() ? AES::encrypt($value) : $value;
+  }
+
+  /**
+   * Decrypt value
+   *
+   * @param mixed $value
+   * @return string
+   */
+  private static function decrypt($value)
+  {
+    return self::isEncrypted() ? AES::decrypt($value) : $value;
+  }
 
   /**
    * Set and overwrite cache
@@ -21,7 +55,7 @@ final class Cache extends CacheBase implements CacheInterface
    */
   public static function set(string $key, $value, Carbon $expire)
   {
-    return (new self)->assign($key, $value, $expire);
+    return (new self)->cache()->assign(strtolower($key), self::encrypt($value), $expire);
   }
 
   /**
@@ -33,7 +67,7 @@ final class Cache extends CacheBase implements CacheInterface
    */
   public static function forever(string $key, $value)
   {
-    return (new self)->assign($key, $value, null);
+    return (new self)->cache()->assign(strtolower($key), self::encrypt($value), null);
   }
 
   /**
@@ -44,7 +78,7 @@ final class Cache extends CacheBase implements CacheInterface
    */
   public static function get(string $key)
   {
-    return (new self)->retrieve($key);
+    return self::decrypt((new self)->cache()->retrieve(strtolower($key)));
   }
 
   /**
@@ -55,7 +89,7 @@ final class Cache extends CacheBase implements CacheInterface
    */
   public static function has(string $key) : bool
   {
-    return (new self)->present($key);
+    return (new self)->cache()->present(strtolower($key));
   }
 
   /**
@@ -66,7 +100,17 @@ final class Cache extends CacheBase implements CacheInterface
    */
   public static function forget(string $key) : bool
   {
-    return (new Cache)->remove($key);
+    return (new self)->cache()->remove(strtolower($key));
+  }
+
+  /**
+   * Get all cached data
+   *
+   * @return array
+   */
+  public static function all() : array
+  {
+    return (new self)->cache()->all();
   }
 
   /**
@@ -95,6 +139,6 @@ final class Cache extends CacheBase implements CacheInterface
    */
   public static function flush()
   {
-    return (new Cache)->delete();
+    return (new self)->cache()->delete();
   }
 }

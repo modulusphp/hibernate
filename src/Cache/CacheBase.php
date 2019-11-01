@@ -2,22 +2,30 @@
 
 namespace Modulus\Hibernate\Cache;
 
-use Carbon\Carbon;
 use Modulus\Support\Config;
-use Modulus\Security\Encrypter;
-use Modulus\Support\Filesystem;
-use Modulus\Hibernate\Encrypt\AES;
-use Modulus\Hibernate\Exceptions\CachePermissionException;
-use Modulus\Hibernate\Exceptions\HibernateCacheNotSetException;
+use Modulus\Hibernate\Exceptions\InvalidCacheDriver;
+use Modulus\Hibernate\Exceptions\DriverDoesNotExistException;
+use Modulus\Hibernate\Exceptions\DriverAlreadyExistsException;
+use Modulus\Hibernate\Exceptions\DriverAlreadyRegisteredException;
 
 class CacheBase
 {
   /**
-   * $file
+   * Set default driver
    *
-   * @var string
+   * @var mixed
    */
-  protected $file;
+  protected $driver;
+
+  /**
+   * Supported drivers
+   *
+   * @var array
+   */
+  protected static $supported = [
+    'file' => \Modulus\Hibernate\Cache\Drivers\File::class,
+    'redis' => \Modulus\Hibernate\Cache\Drivers\Redis::class
+  ];
 
   /**
    * __construct
@@ -26,155 +34,60 @@ class CacheBase
    */
   public function __construct()
   {
-    if (!Config::has('hibernate.cache.storage')) {
-      throw new HibernateCacheNotSetException;
-    }
+    $default = Config::get('cache.default');
+    $driver  = Config::get("cache.connections.{$default}.driver");
 
-    $this->instance(DIRECTORY_SEPARATOR);
+    $this->driver = new self::$supported[$this->getDriver($driver) ?? 'file'];
   }
 
   /**
-   * Delete cache file
+   * Get cache driver
    *
+   * @param string $driver
+   * @return mixed
+   */
+  private function getDriver(string $driver)
+  {
+    return isset(self::$supported[$driver]) ? $driver : null;
+  }
+
+  /**
+   * Register a new driver
+   *
+   * @param string $name
+   * @param string $class
+   * @throws DriverAlreadyExistsException
+   * @throws DriverDoesNotExistException
+   * @throws DriverAlreadyRegisteredException
    * @return bool
    */
-  public function delete()
+  public static function register(string $name, string $class) : bool
   {
-    return file_exists($this->file) ? Filesystem::delete($this->file) : false;
+    if (isset(self::$supported[$name]))
+      throw new DriverAlreadyExistsException($name);
+
+    if (!class_exists($class))
+      throw new DriverDoesNotExistException($class);
+
+    if (isset(array_values(self::$supported)[$class])) 
+      throw new DriverAlreadyRegisteredException($class);
+
+    self::$supported = array_merge(self::$supported, [
+      $name => $class
+    ]);
+
+    return true;
   }
 
   /**
-   * Remove key from cache file
+   * Get default cache
    *
-   * @param string $key
-   * @return bool
+   * @return mixed
    */
-  public function remove(string $key) : bool
+  public function cache()
   {
-    $file = $this->file;
+    if ($this->driver instanceof Driver) return $this->driver;
 
-    if (file_exists($file)) {
-      $cache = AES::decrypt(file_get_contents($file));
-
-      if (is_array($cache) && isset($cache[$key])) {
-        unset($cache[$key]);
-
-        return file_put_contents($file, AES::encrypt($cache));
-      }
-    }
-
-    return false;
-  }
-
-  /**
-   * Assign new item to key
-   *
-   * @param string $key
-   * @param mixed $value
-   * @param Carbon $expire
-   * @return void
-   */
-  public function assign(string $key, $value, ?Carbon $expire = null)
-  {
-    $file = $this->file;
-
-    if (file_exists($file)) {
-      $cache = AES::decrypt(file_get_contents($file));
-
-      $cache[$key] = ['data' => $value, 'expire' => $expire];
-
-      return file_put_contents($file, AES::encrypt($cache)) ? true : false;
-    }
-
-    return false;
-  }
-
-  /**
-   * Retrieve cached value
-   *
-   * @param string $key
-   * @return void
-   */
-  public function retrieve(string $key)
-  {
-    $file = $this->file;
-
-    if (file_exists($file)) {
-      $cache = AES::decrypt(file_get_contents($file));
-
-      return isset($cache[$key]) ? $cache[$key]['data'] : null;
-    }
-
-    return null;
-  }
-
-  /**
-   * Check if item is cached
-   *
-   * @param string $key
-   * @return bool
-   */
-  public function present(string $key) : bool
-  {
-    $file = $this->file;
-
-    if (file_exists($file)) {
-      $cache = AES::decrypt(file_get_contents($file));
-
-      return isset($cache[$key]) ? true : false;
-    }
-
-    return false;
-  }
-
-  /**
-   * Get all cached data
-   *
-   * @return array
-   */
-  public function all() : array
-  {
-    return (file_exists($this->file) && is_array(AES::decrypt(file_get_contents($this->file)))) ? AES::decrypt(file_get_contents($this->file)) : [];
-  }
-
-  /**
-   * Get cache details
-   *
-   * @return array|null
-   */
-  public function details()
-  {
-    $file = $this->file;
-
-    if (file_exists($file)) {
-      $cache = AES::decrypt(file_get_contents($file));
-
-      return [
-        'records' => count(is_array($cache) ? $cache : []),
-        'size' => round(filesize($file) / 1024, 1),
-        'updated_at' => date('Y-m-d h:i:s', filemtime($file))
-      ];
-    }
-
-    return null;
-  }
-
-  /**
-   * Prepare the cache
-   *
-   * @param string $ds
-   * @return void
-   */
-  private function instance($ds)
-  {
-    $path = Config::get('app.dir') . Config::get('hibernate.cache.storage');
-
-    if (!is_dir($path))
-      mkdir($path, 0777, true);
-
-    if (!is_dir($path))
-      throw new CachePermissionException;
-
-    $this->file = $path . $ds . '.cache';
+    throw new InvalidCacheDriver;
   }
 }
