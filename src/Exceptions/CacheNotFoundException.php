@@ -4,14 +4,14 @@ namespace Modulus\Hibernate\Exceptions;
 
 use Exception;
 
-class CachePermissionException extends Exception
+class CacheNotFoundException extends Exception
 {
   /**
    * $message
    *
    * @var string
    */
-  protected $message = "Could not create cache folder. Check your permissions";
+  protected $message = "Can't find cache.";
 
   /**
    * __construct
