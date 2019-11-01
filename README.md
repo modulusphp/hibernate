@@ -93,6 +93,11 @@ Now, the user `array` will be automatically removed from the cache after a month
 
 > Note: you must add a cron that executes `craftsman schedule:run` every minute (`* * * * *`)
 
+#### Configuration
+
+Out of the box, Hibernate Cache can use both `redis` and/or `file` based caching. `file` based caching is used as the default caching driver.
+You can easily use `redis` as the default caching driver by simply setting `HIBERNATE_CACHE` to `redis` in the `.env`.
+
 #### Methods
 
 Here are some methods to help you get started.
