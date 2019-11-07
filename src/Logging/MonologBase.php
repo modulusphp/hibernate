@@ -9,6 +9,13 @@ use Modulus\Hibernate\Exceptions\InvalidLogDriverException;
 class MonologBase
 {
   /**
+   * Set default driver
+   *
+   * @var mixed
+   */
+  protected $driver;
+
+  /**
    * Supported drivers
    *
    * @var array
