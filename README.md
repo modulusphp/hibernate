@@ -14,6 +14,12 @@ composer require modulusphp/hibernate
 Getting Started
 ---------------
 
+#### Logging
+
+Hibernate's logger, is meant to be a replacement of @atlantisphp's `telemonlog` package. Built on top Monolog, you get a more stable and widely supported logging library.
+
+> See the config `logging.php` for more information
+
 #### Queue Worker (alpha)
 
 The Queue Worker allows you to easily execute tasks in the background. This is done by using Supervisor.
