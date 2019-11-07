@@ -3,9 +3,20 @@
 namespace Modulus\Hibernate\Logging;
 
 use Modulus\Support\Config;
+use Monolog\Handler\HandlerInterface;
 
 class Driver
 {
+  /**
+   * Register handler
+   *
+   * @return mixed
+   */
+  public function handler() : HandlerInterface
+  {
+    //
+  }
+
   /**
    * Get application environment
    *
