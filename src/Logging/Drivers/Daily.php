@@ -8,6 +8,24 @@ use Modulus\Hibernate\Logging\Driver;
 class Daily extends Driver
 {
   /**
+   * Get log storage
+   *
+   * @return string
+   */
+  private function getStorage() : string
+  {
+    return (
+
+      Config::has("logging.channels.{$this->getName()}.storage") ?
+
+      Config::get("logging.channels.{$this->getName()}.storage") :
+      
+      storage_path('logs/')
+
+    );
+  }
+
+  /**
    * Get log name
    *
    * @return string
