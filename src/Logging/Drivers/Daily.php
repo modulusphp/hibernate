@@ -8,6 +8,20 @@ use Modulus\Hibernate\Logging\Driver;
 class Daily extends Driver
 {
   /**
+   * Get log file
+   *
+   * @return string
+   */
+  private function getLogFile() : string
+  {
+    $storage = rtrim($this->getStorage(), '/');
+
+    $name    = $this->getLogName();
+
+    return "{$storage}/{$name}-" . date("Y-m-d") . '.log';
+  }
+
+  /**
    * Get log storage
    *
    * @return string
