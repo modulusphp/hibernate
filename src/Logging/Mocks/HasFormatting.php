@@ -2,8 +2,20 @@
 
 namespace Modulus\Hibernate\Logging\Mocks;
 
+use Monolog\Formatter\LineFormatter;
+
 trait HasFormatting
 {
+  /**
+   * Set formatting
+   *
+   * @return mixed
+   */
+  public function formatter() : LineFormatter
+  {
+    return new LineFormatter($this->getOutput(), $this->getDateFormat(), false, true);
+  }
+
   /**
    * Get log output
    *
