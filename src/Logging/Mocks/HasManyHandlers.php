@@ -2,6 +2,7 @@
 
 namespace Modulus\Hibernate\Logging\Mocks;
 
+use Monolog\Logger;
 use Modulus\Support\Config;
 use Modulus\Hibernate\Logging\Driver;
 use Modulus\Hibernate\Logging\MonologBase;
@@ -14,6 +15,34 @@ trait HasManyHandlers
    * @var string|null $default
    */
   public $default = null;
+
+  /**
+   * Load other handlers
+   *
+   * @param Logger $log
+   * @param array $channels
+   * @return Logger $log
+   */
+  private function attachHandlers(Logger $log, array $channels) : Logger
+  {
+    foreach($channels as $channel) {
+      $driver = $this->getDriverNameByChannel($channel);
+
+      if (
+        $driver &&
+        $this->getDriverInstanceByDriverName($driver)
+      ) {
+        $driver  = $this->getDriverInstanceByDriverName($driver)->setDefault($channel);
+        $handler = $driver->handler();
+
+        $handler->setFormatter($driver->formatter());
+
+        $log->pushHandler($handler);
+      }
+    }
+
+    return $log;
+  }
 
   /**
    * Get driver
