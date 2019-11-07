@@ -18,6 +18,26 @@ trait HasLogLevel
   }
 
   /**
+   * Get log level
+   *
+   * @return int
+   */
+  public function getLogLevel() : int
+  {
+    $level = (
+      Config::has("logging.channels.{$this->getName()}.level") ?
+
+      Config::get("logging.channels.{$this->getName()}.level") :
+
+      'debug'
+    );
+
+    return $this->getLevelNumber(
+      strtolower($level)
+    );
+  }
+
+  /**
    * Get log level number
    *
    * @return int
