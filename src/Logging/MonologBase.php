@@ -2,6 +2,7 @@
 
 namespace Modulus\Hibernate\Logging;
 
+use Monolog\Logger;
 use Modulus\Support\Config;
 use Modulus\Hibernate\Logging\Driver;
 use Modulus\Hibernate\Exceptions\InvalidLogDriverException;
@@ -30,6 +31,7 @@ class MonologBase
    * Init monolog
    *
    * @param null|string $channel
+   * @throws InvalidLogDriverException
    * @return void
    */
   public function __construct(string $channel = null)
@@ -38,6 +40,9 @@ class MonologBase
     $driver  = Config::get("logging.channels.{$default}.driver");
 
     $this->driver = (new self::$supported[$this->getDriver($driver) ?? 'single']);
+
+    if (!$this->driver instanceof Driver)
+      throw new InvalidLogDriverException;
 
     $this->driver = $channel ? $this->driver->setDefault($channel)->get() : $this->driver->get();
   }
@@ -67,13 +72,10 @@ class MonologBase
   /**
    * Get log
    *
-   * @throws InvalidLogDriverException
-   * @return Driver
+   * @return Logger
    */
-  public function log()
+  public function log() : Logger
   {
-    if ($this->driver instanceof Driver) return $this->driver;
-
-    throw new InvalidLogDriverException;
+    return $this->driver;
   }
 }
