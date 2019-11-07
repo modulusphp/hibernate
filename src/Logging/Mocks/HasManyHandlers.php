@@ -17,6 +17,22 @@ trait HasManyHandlers
   public $default = null;
 
   /**
+   * Check if logger can load many handlers
+   *
+   * @param Logger $log
+   * @return Logger
+   */
+  private function withHandlers(Logger $log) : Logger
+  {
+    $channels = Config::has('logging.with_handlers') ? Config::get('logging.with_handlers') : [];
+
+    if (is_array($channels))
+      return $this->attachHandlers($log, $channels);
+
+    return $log;
+  }
+
+  /**
    * Load other handlers
    *
    * @param Logger $log
