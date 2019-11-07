@@ -3,10 +3,36 @@
 namespace Modulus\Hibernate\Logging\Drivers;
 
 use Modulus\Support\Config;
+use Monolog\Handler\SlackHandler;
 use Modulus\Hibernate\Logging\Driver;
+use Monolog\Handler\HandlerInterface;
 
 class Slack extends Driver
 {
+  /**
+   * Register handler
+   *
+   * @return HandlerInterface
+   */
+  public function handler() : HandlerInterface
+  {
+    return new SlackHandler(
+
+      $this->getToken(),
+
+      $this->getChannel(),
+
+      $this->getUsername(),
+
+      true,
+
+      $this->getEmoji(),
+
+      $this->getLogLevel()
+
+    );
+  }
+
   /**
    * Get slack bot token
    *
