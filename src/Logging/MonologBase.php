@@ -27,6 +27,22 @@ class MonologBase
   ];
 
   /**
+   * Init monolog
+   *
+   * @param null|string $channel
+   * @return void
+   */
+  public function __construct(string $channel = null)
+  {
+    $default = $channel ?? Config::get('logging.default');
+    $driver  = Config::get("logging.channels.{$default}.driver");
+
+    $this->driver = (new self::$supported[$this->getDriver($driver) ?? 'single']);
+
+    $this->driver = $channel ? $this->driver->setDefault($channel)->get() : $this->driver->get();
+  }
+
+  /**
    * Get monolog driver
    *
    * @param string $driver
