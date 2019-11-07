@@ -25,4 +25,15 @@ class MonologBase
     'daily' => \Modulus\Hibernate\Logging\Drivers\Daily::class,
     'slack' => \Modulus\Hibernate\Logging\Drivers\Slack::class,
   ];
+
+  /**
+   * Get monolog driver
+   *
+   * @param string $driver
+   * @return mixed
+   */
+  private function getDriver(string $driver)
+  {
+    return isset(self::$supported[$driver]) ? $driver : null;
+  }
 }
