@@ -8,6 +8,24 @@ use Modulus\Hibernate\Logging\Driver;
 class Slack extends Driver
 {
   /**
+   * Get slack username
+   *
+   * @return string
+   */
+  private function getUsername() : ?string
+  {
+    return (
+
+      Config::has("logging.channels.{$this->getName()}.username") ?
+
+      Config::get("logging.channels.{$this->getName()}.username") :
+
+      null
+
+    );
+  }
+
+  /**
    * Get slack channel
    *
    * @return string
