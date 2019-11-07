@@ -10,4 +10,17 @@ trait HasManyHandlers
    * @var string|null $default
    */
   public $default = null;
+
+  /**
+   * Set default channel
+   *
+   * @param string $name
+   * @return self
+   */
+  public function setDefault(string $name) : self
+  {
+    $this->default = $name;
+
+    return $this;
+  }
 }
