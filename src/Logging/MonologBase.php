@@ -47,4 +47,17 @@ class MonologBase
   {
     return isset(self::$supported[$driver]) ? (new self::$supported[$driver]) : null;
   }
+
+  /**
+   * Get log
+   *
+   * @throws InvalidLogDriverException
+   * @return Driver
+   */
+  public function log()
+  {
+    if ($this->driver instanceof Driver) return $this->driver;
+
+    throw new InvalidLogDriverException;
+  }
 }
