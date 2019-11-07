@@ -36,4 +36,15 @@ class MonologBase
   {
     return isset(self::$supported[$driver]) ? $driver : null;
   }
+
+  /**
+   * Find monolog driver
+   *
+   * @param string $driver
+   * @return mixed
+   */
+  public static function instance(string $driver)
+  {
+    return isset(self::$supported[$driver]) ? (new self::$supported[$driver]) : null;
+  }
 }
