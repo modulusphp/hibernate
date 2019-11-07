@@ -8,6 +8,24 @@ use Modulus\Hibernate\Logging\Driver;
 class Slack extends Driver
 {
   /**
+   * Get slack bot token
+   *
+   * @return string
+   */
+  private function getToken() : string
+  {
+    return (
+
+      Config::has("logging.channels.{$this->getName()}.token") ?
+
+      Config::get("logging.channels.{$this->getName()}.token") :
+
+      ''
+
+    );
+  }
+
+  /**
    * Get slack channel
    *
    * @return string
