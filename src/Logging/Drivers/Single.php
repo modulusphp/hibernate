@@ -3,7 +3,9 @@
 namespace Modulus\Hibernate\Logging\Drivers;
 
 use Modulus\Support\Config;
+use Monolog\Handler\StreamHandler;
 use Modulus\Hibernate\Logging\Driver;
+use Monolog\Handler\HandlerInterface;
 
 class Single extends Driver
 {
@@ -15,6 +17,16 @@ class Single extends Driver
   public function __construct()
   {
     if (!file_exists($this->getLogFile())) touch($this->getLogFile());
+  }
+
+  /**
+   * Register handler
+   *
+   * @return HandlerInterface
+   */
+  public function handler() : HandlerInterface
+  {
+    return new StreamHandler($this->getLogFile(), $this->getLogLevel());
   }
 
   /**
