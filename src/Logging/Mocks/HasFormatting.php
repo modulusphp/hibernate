@@ -3,15 +3,16 @@
 namespace Modulus\Hibernate\Logging\Mocks;
 
 use Monolog\Formatter\LineFormatter;
+use Monolog\Formatter\JsonFormatter;
 
 trait HasFormatting
 {
   /**
    * Set formatting
    *
-   * @return mixed
+   * @return LineFormatter|JsonFormatter
    */
-  public function formatter() : LineFormatter
+  public function formatter()
   {
     return new LineFormatter($this->getOutput(), $this->getDateFormat(), false, true);
   }
