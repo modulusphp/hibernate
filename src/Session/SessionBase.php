@@ -12,6 +12,13 @@ class SessionBase
   protected $driver;
 
   /**
+   * Singleton
+   *
+   * @var mixed
+   */
+  protected static $singleton;
+
+  /**
    * Supported drivers
    *
    * @var array
