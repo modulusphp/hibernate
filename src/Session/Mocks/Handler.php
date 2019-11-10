@@ -23,4 +23,22 @@ trait Handler
 
     );
   }
+
+  /**
+   * Get session path
+   *
+   * @return null|string
+   */
+  private function getPath() : ?string
+  {
+    return (
+
+      Config::has('session.path') ?
+
+      Config::get('session.path') :
+
+      null
+
+    );
+  }
 }
