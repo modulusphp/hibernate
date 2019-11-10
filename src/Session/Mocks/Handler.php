@@ -77,4 +77,22 @@ trait Handler
 
     );
   }
+
+  /**
+   * Get session httpOnly
+   *
+   * @return bool
+   */
+  private function getHttpOnly() : bool
+  {
+    return (
+
+      Config::has('session.http_only') ?
+
+      Config::get('session.http_only') :
+
+      true
+
+    );
+  }
 }
