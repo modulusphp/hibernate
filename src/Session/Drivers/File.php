@@ -3,10 +3,20 @@
 namespace Modulus\Hibernate\Session\Drivers;
 
 use Modulus\Support\Config;
+use Sesshin\Store\FileStore;
+use Sesshin\Store\StoreInterface;
 use Modulus\Hibernate\Session\Driver;
 
 class File extends Driver
 {
+  /**
+   * {@inheritDoc}
+   */
+  public function handler() : StoreInterface
+  {
+    return new FileStore($this->getPath());
+  }
+
   /**
    * Get store path
    *
