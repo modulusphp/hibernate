@@ -56,4 +56,16 @@ class Session
   {
     (new SessionBase)->session()->logout();
   }
+
+  /**
+   * Put a key / value pair or array of key / value pairs in the session
+   *
+   * @param string|array $key
+   * @param mixed $value
+   * @return void
+   */
+  public static function put($key, $value = null)
+  {
+    (new SessionBase)->session()->put($key, $value);
+  }
 }
