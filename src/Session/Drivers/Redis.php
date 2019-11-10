@@ -2,11 +2,23 @@
 
 namespace Modulus\Hibernate\Session\Drivers;
 
+use Predis\Client;
 use Modulus\Support\Config;
 use Modulus\Hibernate\Session\Driver;
+use Doctrine\Common\Cache\PredisCache;
 
 class Redis extends Driver
 {
+  /**
+   * Get redis cache
+   *
+   * @return PredisCache
+   */
+  private function getRedis()
+  {
+    return new PredisCache(new Client($this->getConnectionOptions()));
+  }
+
   /**
    * Get connection options
    *
