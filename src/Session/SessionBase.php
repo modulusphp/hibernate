@@ -69,4 +69,14 @@ class SessionBase
   {
     return self::$singleton ?? self::$singleton = $this->driver->get();
   }
+
+  /**
+   * Boot session
+   *
+   * @return void
+   */
+  public static function boot()
+  {
+    return (new self)->session();
+  }
 }
