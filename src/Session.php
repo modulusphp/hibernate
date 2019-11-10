@@ -26,4 +26,14 @@ class Session
   {
     (new SessionBase)->session()->login($userId);
   }
+
+  /**
+   * Check if user is logged in
+   *
+   * @return bool
+   */
+  public static function isLogged() : bool
+  {
+    return (new SessionBase)->session()->isLogged();
+  }
 }
