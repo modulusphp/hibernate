@@ -11,6 +11,23 @@ class Handler extends HandlerStore
   use MockHandler;
 
   /**
+   * {@inheritDoc}
+   */
+  private $idStore;
+
+  /**
+   * {@inheritDoc}
+   */
+  public function getIdStore()
+  {
+    if (!$this->idStore) {
+      $this->idStore = $this->createStore();
+    }
+
+    return $this->idStore;
+  }
+
+  /**
    * Create store
    *
    * @return CookieStore
