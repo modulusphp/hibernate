@@ -80,4 +80,15 @@ class Session
   {
     (new SessionBase)->session()->push($key, $value);
   }
+
+  /**
+   * Remove one or many items from the session
+   *
+   * @param array $keys
+   * @return void
+   */
+  public static function forget(array $keys)
+  {
+    (new SessionBase)->session()->forget($keys);
+  }
 }
