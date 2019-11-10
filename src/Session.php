@@ -46,4 +46,14 @@ class Session
   {
     return !(new SessionBase)->session()->isLogged();
   }
+
+  /**
+   * Log user out
+   *
+   * @return void
+   */
+  public static function logout()
+  {
+    (new SessionBase)->session()->logout();
+  }
 }
