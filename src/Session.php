@@ -2,6 +2,7 @@
 
 namespace Modulus\Hibernate;
 
+use Sesshin\SessionFlash;
 use Modulus\Hibernate\Session\SessionBase;
 
 class Session
@@ -90,5 +91,15 @@ class Session
   public static function forget(array $keys)
   {
     (new SessionBase)->session()->forget($keys);
+  }
+
+  /**
+   * Get flash
+   *
+   * @return SessionFlash
+   */
+  public static function flash() : SessionFlash
+  {
+    return (new SessionBase)->session()->flash();
   }
 }
