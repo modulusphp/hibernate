@@ -8,6 +8,24 @@ use Modulus\Hibernate\Session\Driver;
 class Redis extends Driver
 {
   /**
+   * Get connection options
+   *
+   * @return array
+   */
+  private function getConnectionOptions() : array
+  {
+    return (
+
+      Config::has("redis.connections.{$this->getConnectionName()}") ?
+
+      Config::get("redis.connections.{$this->getConnectionName()}") :
+
+      []
+
+    );
+  }
+
+  /**
    * Get store path
    *
    * @return string
