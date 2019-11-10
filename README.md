@@ -14,6 +14,59 @@ composer require modulusphp/hibernate
 Getting Started
 ---------------
 
+#### Session (alpha)
+
+A more secure session handler. Hibernate's session handler is more secure and supports more Store Driver's than Modulus's default Blulight Session handler.
+
+To switch to Hibernate's session handler, go to the `index.php` file in the public directory, and remove `Blulight`.
+
+Then register the following middleware's in the `HttpFoundation` class:
+
+```php
+\Modulus\Hibernate\Session\Middleware\StartSession::class,
+\Modulus\Hibernate\Session\Middleware\ShareSessionData::class,
+```
+
+Once that has been done, head over to the `VerifyCsrfToken` class and extend Hibernate's `VerifyCsrfToken` class:
+
+> Note, this may not work
+
+```php
+use Modulus\Hibernate\Session\Middleware\VerifyCsrfToken as Middleware;
+
+class VerifyCsrfToken extends Middleware
+{
+  ...
+```
+
+Now, update the `session.php` config file with the following content:
+
+```php
+<?php
+
+return [
+  'default' => env('SESSION_CONNETION', 'file'),
+
+  'name' => env('SESSION_NAME', 'modulus'),
+
+  'connections' => [
+    'file' => [
+      'driver' => 'file',
+      'files' => storage_path('framework/sessions')
+    ],
+
+    'redis' => [
+      'driver' => 'redis',
+      'connection' => 'session'
+    ]
+  ]
+];
+```
+
+And you're done!
+
+> Note, this is still a work in progress, so do not use it in production
+
 #### Logging
 
 Hibernate's logger, is meant to be a replacement of @atlantisphp's `telemonlog` package. Built on top Monolog, you get a more stable and widely supported logging library.
