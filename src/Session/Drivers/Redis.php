@@ -4,11 +4,21 @@ namespace Modulus\Hibernate\Session\Drivers;
 
 use Predis\Client;
 use Modulus\Support\Config;
+use Sesshin\Store\DoctrineCache;
+use Sesshin\Store\StoreInterface;
 use Modulus\Hibernate\Session\Driver;
 use Doctrine\Common\Cache\PredisCache;
 
 class Redis extends Driver
 {
+  /**
+   * {@inheritDoc}
+   */
+  public function handler() : StoreInterface
+  {
+    return new DoctrineCache($this->getRedis());
+  }
+
   /**
    * Get redis cache
    *
