@@ -15,4 +15,15 @@ class Session
   {
     return (new SessionBase)->session()->getUserId();
   }
+
+  /**
+   * Log user in
+   *
+   * @param string $userId
+   * @return void
+   */
+  public static function login(string $userId) : void
+  {
+    (new SessionBase)->session()->login($userId);
+  }
 }
