@@ -26,4 +26,14 @@ class ShareSessionData
   {
     Variable::setData(Session::flash()->get('application/with'));
   }
+
+  /**
+   * Store data in the session
+   *
+   * @return void
+   */
+  private function forgetSessionData()
+  {
+    Session::forget(['application/with']);
+  }
 }
