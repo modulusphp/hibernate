@@ -59,4 +59,22 @@ trait Handler
 
     );
   }
+
+  /**
+   * Get session secure
+   *
+   * @return bool
+   */
+  private function getSecure() : bool
+  {
+    return (
+
+      Config::has('session.secure') ?
+
+      Config::get('session.secure') :
+
+      false
+
+    );
+  }
 }
