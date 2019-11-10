@@ -3,10 +3,87 @@
 namespace Modulus\Hibernate\Session\Middleware;
 
 use Modulus\Hibernate\Session;
-use Modulus\Http\Middleware\VerifyCsrfToken as Middleware;
+use Modulus\Framework\Exceptions\TokenMismatchException;
 
-class VerifyCsrfToken extends Middleware
+class VerifyCsrfToken
 {
+  /**
+   * The URIs that should be excluded from CSRF verification.
+   *
+   * @var array
+   */
+  protected $except = [];
+
+  /**
+   * The URIs that should be excluded from expiration verification.
+   *
+   * @var array
+   */
+  protected $canExpire = [
+    '/logout'
+  ];
+
+  /**
+   * $hasExpired
+   *
+   * @var boolean
+   */
+  protected $hasExpired = false;
+
+  /**
+   * Handle middleware
+   *
+   * @param Request $request
+   * @param bool $continue
+   * @throws TokenMismatchException
+   * @return bool
+   */
+  public function handle($request, $continue) : bool
+  {
+    if (
+      $this->isReading($request) ||
+      $this->shouldIgnore($request) ||
+      (
+        $this->tokenMatches($request) &&
+        $this->hasNotExpired($request)
+      )
+    ) {
+      return $continue;
+    }
+
+    throw new TokenMismatchException(
+      ($this->hasExpired) ? 'Session has expired' : 'Token mismatch'
+    );
+  }
+
+  /**
+   * Determine if the HTTP request uses a ‘read’ verb.
+   *
+   * @param \Modulus\Http\Request $request
+   * @return bool
+   */
+  protected function isReading($request) : bool
+  {
+    return in_array($request->method(), ['HEAD', 'GET', 'OPTIONS']);
+  }
+
+  /**
+   * Check if request should be ignored
+   *
+   * @param \Modulus\Http\Request $request
+   * @return bool
+   */
+  protected function shouldIgnore($request) : bool
+  {
+    /** create url */
+    $this->createUrl(
+      $request,
+      'except'
+    );
+
+    return in_array($request->path(), $this->except) ? true : false;
+  }
+
   /**
    * Check if token matches
    *
@@ -18,6 +95,26 @@ class VerifyCsrfToken extends Middleware
     if (!Session::flash()->has('_session_token')) return false;
 
     return hash_equals(Session::flash()->get('_session_token'), $this->getCsrfToken($request)) ? true : false;
+  }
+
+  /**
+   * Get csrf token
+   *
+   * @param mixed $request
+   */
+  private function getCsrfToken($request) : string
+  {
+    if ($request->has('csrf_token')) {
+      return $request->input('csrf_token');
+    }
+
+    foreach($request->headers() as $header => $value) {
+      if (strtoupper($header) == 'X-CSRF-TOKEN') {
+        return $value;
+      }
+    }
+
+    return '';
   }
 
   /**
@@ -45,5 +142,44 @@ class VerifyCsrfToken extends Middleware
     }
 
     return true;
+  }
+
+  /**
+   * Create url
+   *
+   * @param  \Modulus\Http\Request  $request
+   * @param  string  $type
+   * @return void
+   */
+  private function createUrl($request, string $type)
+  {
+    $data = ($type == 'expire') ? $this->canExpire : $this->except;
+
+    foreach($data as $i => $url) {
+      if (str_contains($url, '{*}')) {
+        $path = explode('/', (substr($request->path(), 0, 1) == '/' ? substr($request->path(), 1) : $request->path()));
+        $url = explode('/', (substr($url, 0, 1) == '/' ? substr($url, 1) : $url));
+
+        if (count($path) == count($url)) {
+          $current = [];
+
+          foreach($url as $k => $t) {
+            if ($t == $path[$k]) {
+              $current[] = $t;
+            } elseif ($t == '{*}') {
+              $current[] = $path[$k];
+            }
+          }
+
+          $data[$i] = implode('/', $current);
+        }
+      }
+    }
+
+    if ($type == 'expire') {
+      $this->canExpire = $data;
+    } else {
+      $this->except = $data;
+    }
   }
 }
