@@ -102,4 +102,14 @@ class Session
   {
     return (new SessionBase)->session()->flash();
   }
+
+  /**
+   * Get session instance
+   *
+   * @return \Sesshin\User\Session
+   */
+  public static function instance()
+  {
+    return (new SessionBase)->session();
+  }
 }
