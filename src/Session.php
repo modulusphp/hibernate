@@ -36,4 +36,14 @@ class Session
   {
     return (new SessionBase)->session()->isLogged();
   }
+
+  /**
+   * Check if user is guest
+   *
+   * @return bool
+   */
+  public static function isGuest() : bool
+  {
+    return !(new SessionBase)->session()->isLogged();
+  }
 }
