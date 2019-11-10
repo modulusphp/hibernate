@@ -2,6 +2,7 @@
 
 namespace Modulus\Hibernate\Session\Middleware;
 
+use Modulus\Utility\Variable;
 use Modulus\Hibernate\Session;
 
 class ShareSessionData
@@ -14,5 +15,15 @@ class ShareSessionData
   private function hasSession() : bool
   {
     return Session::flash()->has('application/with');
+  }
+
+  /**
+   * Store data from previous session
+   *
+   * @return void
+   */
+  private function storeSessionData()
+  {
+    Variable::setData(Session::flash()->get('application/with'));
   }
 }
