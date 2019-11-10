@@ -8,6 +8,25 @@ use Modulus\Hibernate\Session;
 class ShareSessionData
 {
   /**
+   * Handle middleware
+   *
+   * @param \Modulus\Http\Request $request
+   * @return bool $continue
+   */
+  public function handle($request, $continue) : bool
+  {
+    if (
+      $this->hasSession()
+    ) {
+      $this->storeSessionData();
+
+      $this->forgetSessionData();
+    }
+
+    return $continue;
+  }
+
+  /**
    * Check if application has session data
    *
    * @return bool
