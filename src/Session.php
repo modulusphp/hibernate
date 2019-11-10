@@ -68,4 +68,16 @@ class Session
   {
     (new SessionBase)->session()->put($key, $value);
   }
+
+  /**
+   * Push a value onto a session array
+   *
+   * @param string $key
+   * @param mixed $value
+   * @return void
+   */
+  public static function push(string $key, $value)
+  {
+    (new SessionBase)->session()->push($key, $value);
+  }
 }
