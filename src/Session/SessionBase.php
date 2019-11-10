@@ -59,4 +59,14 @@ class SessionBase
   {
     return isset(self::$supported[$driver]) ? $driver : null;
   }
+
+  /**
+   * Get session
+   *
+   * @return \Sesshin\User\Session
+   */
+  public function session()
+  {
+    return self::$singleton ?? self::$singleton = $this->driver->get();
+  }
 }
