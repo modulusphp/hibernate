@@ -41,4 +41,22 @@ trait Handler
 
     );
   }
+
+  /**
+   * Get session domain
+   *
+   * @return null|string
+   */
+  private function getDomain() : ?string
+  {
+    return (
+
+      Config::has('session.domain') ?
+
+      Config::get('session.domain') :
+
+      null
+
+    );
+  }
 }
