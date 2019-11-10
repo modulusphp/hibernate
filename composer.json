@@ -14,7 +14,8 @@
     "modulusphp/support": "1.9.*",
     "monolog/monolog": "^2.0",
     "phpmailer/phpmailer": "^6.0",
-    "predis/predis": "^1.1"
+    "predis/predis": "^1.1",
+    "sobstel/sesshin": "^1.2"
   },
   "autoload": {
     "psr-4": {
