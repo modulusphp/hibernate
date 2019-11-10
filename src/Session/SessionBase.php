@@ -2,6 +2,9 @@
 
 namespace Modulus\Hibernate\Session;
 
+use Modulus\Support\Config;
+use Modulus\Hibernate\Exception\InvalidDriverException;
+
 class SessionBase
 {
   /**
@@ -27,6 +30,24 @@ class SessionBase
     'file' => \Modulus\Hibernate\Session\Drivers\File::class,
     'redis' => \Modulus\Hibernate\Session\Drivers\Redis::class,
   ];
+
+  /**
+   * __construct
+   *
+   * @return void
+   */
+  public function __construct()
+  {
+    $default = Config::get('session.default');
+    $driver  = Config::get("session.connections.{$default}.driver");
+
+    $this->driver = new self::$supported[$this->getDriver($driver)];
+
+    if (!$this->driver instanceof Driver)
+      throw new InvalidDriverException('Invalid session driver');
+
+    $this->driver = $this->driver;
+  }
 
   /**
    * Get cache driver
