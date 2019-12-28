@@ -27,11 +27,28 @@ class AESBase
    */
   public function __construct()
   {
-    $key = str_contains('base:', config('app.key')) ? base64_decode(explode(':', config('app.key'))[1]) : config('app.key');
+    $this->key    = $this->getKey();
+    $this->method = $this->getCipher();
+  }
 
-    $this->key = openssl_digest($key, 'SHA256', true);
+  /**
+   * Get sha application key
+   *
+   * @return string
+   */
+  private function getKey() : string
+  {
+    return openssl_digest(app()->getKey(), 'SHA256', true);
+  }
 
-    $this->method = in_array(config('app.cipher'), openssl_get_cipher_methods()) ? config('app.cipher') : $this->method;
+  /**
+   * Get cipher method
+   *
+   * @return string
+   */
+  private function getCipher() : string
+  {
+    return in_array(app()->config['app']['cipher'], openssl_get_cipher_methods()) ? app()->config['app']['cipher'] : $this->method;
   }
 
   /**
