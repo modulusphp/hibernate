@@ -3,7 +3,6 @@
 namespace Modulus\Hibernate;
 
 use GO\Scheduler;
-use Modulus\Hibernate\Crons\Cache;
 
 class Schedule
 {
@@ -15,8 +14,6 @@ class Schedule
    */
   public static function handle(Scheduler $schedule)
   {
-    $schedule->call(function () {
-      (new Cache)->handle();
-    })->everyMinute();
+    //
   }
 }

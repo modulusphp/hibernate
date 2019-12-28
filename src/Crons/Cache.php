@@ -12,10 +12,12 @@ class Cache
    *
    * @return void
    */
-  public function handle()
+  public static function handle()
   {
+    /** @var array|null $cache */
+
     foreach((new AppCache)->all() as $key => $cache) {
-      if ($cache['expire'] !== null && $this->shouldRemove($cache['expire'])) {
+      if ($cache['expire'] !== null && self::shouldRemove($cache['expire'])) {
         AppCache::pull($key);
       }
     }
@@ -26,7 +28,7 @@ class Cache
    *
    * @return bool
    */
-  public function shouldRemove($expire) : bool
+  public static function shouldRemove($expire) : bool
   {
     $delay = $expire->startOfMinute();
 
