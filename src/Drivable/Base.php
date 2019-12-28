@@ -13,4 +13,11 @@ class Base
    * @var mixed
    */
   protected $driver;
+
+  /**
+   * Supported drivers
+   *
+   * @var array
+   */
+  protected static $supported = [];
 }
