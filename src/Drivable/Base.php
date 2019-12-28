@@ -20,4 +20,15 @@ class Base
    * @var array
    */
   protected static $supported = [];
+
+  /**
+   * Get driver
+   *
+   * @param string $driver
+   * @return mixed
+   */
+  protected function getDriver(string $driver)
+  {
+    return isset(self::$supported[$driver]) ? $driver : null;
+  }
 }
