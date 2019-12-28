@@ -2,6 +2,7 @@
 
 namespace Modulus\Hibernate\Session;
 
+use Carbon\Carbon;
 use Sesshin\User\Session;
 use Modulus\Support\Config;
 use Sesshin\Store\StoreInterface;
@@ -18,6 +19,8 @@ class Driver
     $session = new Session($this->handler());
 
     $session->setIdHandler(new Handler);
+
+    $session->setTtl($this->getTtl());
 
     $session->open(true);
 
@@ -42,5 +45,15 @@ class Driver
   public function getName() : string
   {
     return Config::get('session.default');
+  }
+
+  /**
+   * Get time to live
+   *
+   * @return int
+   */
+  public function getTtl() : int
+  {
+    return Carbon::now()->addMinutes(app()->config['auth']['expire']['session_token'])->diffInSeconds();
   }
 }

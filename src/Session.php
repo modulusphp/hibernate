@@ -3,6 +3,7 @@
 namespace Modulus\Hibernate;
 
 use Sesshin\SessionFlash;
+use Sesshin\User\Session as UserSession;
 use Modulus\Hibernate\Session\SessionBase;
 
 class Session
@@ -106,9 +107,9 @@ class Session
   /**
    * Get session instance
    *
-   * @return \Sesshin\User\Session
+   * @return UserSession
    */
-  public static function instance()
+  public static function instance() : UserSession
   {
     return (new SessionBase)->session();
   }
