@@ -14,9 +14,11 @@ class Daily extends Driver
    *
    * @return void
    */
-  public function __construct()
+  public function __construct($create = true)
   {
-    if (!file_exists($this->getLogFile())) touch($this->getLogFile());
+    if (function_exists('app') && app()->kernel) $create = false;
+    
+    if ($create && !file_exists($this->getLogFile())) touch($this->getLogFile());
   }
 
   /**
