@@ -46,4 +46,16 @@ class Write
   {
     return $this->output->writeln($messages, $options);
   }
+
+  /**
+   * Writes a info message to the output and adds a newline at the end
+   *
+   * @param string|iterable $messages The message as an iterable of strings or a single string
+   * @param bool $newline Whether to add a newline
+   * @return mixed
+   */
+  public function info(string $message, $options = 0)
+  {
+    return $this->output->writeln("<info>{$message}</info>", $options);
+  }
 }
