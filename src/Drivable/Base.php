@@ -59,4 +59,15 @@ class Base
 
     return true;
   }
+
+  /**
+   * Find driver
+   *
+   * @param string $driver
+   * @return mixed
+   */
+  public static function instance(string $driver)
+  {
+    return isset(self::$supported[$driver]) ? (new self::$supported[$driver]) : null;
+  }
 }
